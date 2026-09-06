@@ -6,3 +6,6 @@ migrations: bin/migrate
 
 bin/migrate: migrate.cpp
 	g++ migrate.cpp -o bin/migrate -lpqxx -lpq
+
+seed: seed.sql
+	psql $(DATABASE_URL) -f seed.sql
