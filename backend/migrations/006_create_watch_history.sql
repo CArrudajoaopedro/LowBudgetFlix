@@ -1,4 +1,4 @@
-CREATE TABLE watch_history (
+CREATE TABLE IF NOT EXISTS watch_history (
     id SERIAL PRIMARY KEY,
     user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
     episode_id INT NOT NULL REFERENCES episodes(id) ON DELETE CASCADE,

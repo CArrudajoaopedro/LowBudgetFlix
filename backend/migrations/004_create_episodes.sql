@@ -1,4 +1,4 @@
-CREATE TABLE episodes (
+CREATE TABLE IF NOT EXISTS episodes (
     id SERIAL PRIMARY KEY,
     content_id INT NOT NULL REFERENCES contents(id) ON DELETE CASCADE,
     season_number INT DEFAULT 1,

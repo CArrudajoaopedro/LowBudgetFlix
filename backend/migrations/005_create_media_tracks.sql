@@ -1,4 +1,4 @@
-CREATE TABLE subtitles (
+CREATE TABLE IF NOT EXISTS subtitles (
     id SERIAL PRIMARY KEY,
     episode_id INT NOT NULL REFERENCES episodes(id) ON DELETE CASCADE,
     language_code VARCHAR(10) NOT NULL, -- Ex: 'pt-BR', 'en-US'
@@ -6,7 +6,7 @@ CREATE TABLE subtitles (
     CONSTRAINT unique_episode_subtitle UNIQUE (episode_id, language_code)
 );
 
-CREATE TABLE audio_tracks (
+CREATE TABLE IF NOT EXISTS audio_tracks (
     id SERIAL PRIMARY KEY,
     episode_id INT NOT NULL REFERENCES episodes(id) ON DELETE CASCADE,
     language_code VARCHAR(10) NOT NULL,
@@ -15,6 +15,6 @@ CREATE TABLE audio_tracks (
     CONSTRAINT unique_episode_audio UNIQUE (episode_id, language_code)
 );
 
-CREATE UNIQUE INDEX idx_only_one_default
+CREATE UNIQUE INDEX IF NOT EXISTS idx_only_one_default
 ON audio_tracks (episode_id)
-WHERE is_original == TRUE;
+WHERE is_original = TRUE;
