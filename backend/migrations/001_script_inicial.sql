@@ -26,7 +26,9 @@ CREATE TABLE IF NOT EXISTS public.usuarios
     email character varying(350) NOT NULL,
     senha_hash text NOT NULL,
     flag_administrador boolean NOT NULL DEFAULT False,
-    CONSTRAINT pk_id_usuario PRIMARY KEY (id)
+    criado_em timestamptz NOT NULL DEFAULT now(),
+    CONSTRAINT pk_id_usuario PRIMARY KEY (id),
+    CONSTRAINT unique_usuario_email UNIQUE (email)
 );
 
 CREATE TABLE IF NOT EXISTS public.conteudos
@@ -37,6 +39,7 @@ CREATE TABLE IF NOT EXISTS public.conteudos
     tipo public.tipo_conteudo NOT NULL,
     lancamento date NOT NULL,
     duracao integer,
+    criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_id_conteudo PRIMARY KEY (id)
 );
 
@@ -50,6 +53,7 @@ CREATE TABLE IF NOT EXISTS public.episodios
     duracao integer NOT NULL,
     temporada smallint NOT NULL,
     numero smallint NOT NULL,
+    criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_id_episodio PRIMARY KEY (id)
 );
 
@@ -63,6 +67,7 @@ CREATE TABLE IF NOT EXISTS public.faixas
     tipo public.tipo_faixa NOT NULL,
     resolucao public.resolucao_video,
     flag_original boolean DEFAULT False,
+    criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_id_faixa PRIMARY KEY (id),
     CONSTRAINT faixa_referencia_unica CHECK (
         (id_episodio IS NULL AND id_conteudo IS NOT NULL) OR (id_episodio IS NOT NULL AND id_conteudo IS NULL)
@@ -76,6 +81,7 @@ CREATE TABLE IF NOT EXISTS public.artistas
     nascimento date NOT NULL,
     nacionalidade character(3) NOT NULL,
     foto bytea NULL,
+    criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_id_artista PRIMARY KEY (id)
 );
 
@@ -86,8 +92,8 @@ CREATE TABLE IF NOT EXISTS public.historico_visualizacao
     id_conteudo integer,
     id_episodio integer,
     progresso integer NOT NULL,
-    inicio timestamptz NOT NULL DEFAULT now(),
     atualizado_em timestamptz NOT NULL DEFAULT now(),
+    criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_id_historico PRIMARY KEY (id),
     CONSTRAINT historico_unique_usuario_conteudo UNIQUE (id_usuario, id_conteudo),
     CONSTRAINT historico_unique_usuario_episodio UNIQUE (id_usuario, id_episodio),
@@ -102,6 +108,7 @@ CREATE TABLE IF NOT EXISTS public.creditos
     id_artista integer NOT NULL,
     id_conteudo integer NOT NULL,
     papel public.papel_credito NOT NULL,
+    criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_credito PRIMARY KEY (id),
     CONSTRAINT credito_unique_artista_conteudo_papel UNIQUE (id_artista, id_conteudo, papel)
 );
@@ -112,6 +119,7 @@ CREATE TABLE IF NOT EXISTS public.avaliacoes
     id_usuario integer NOT NULL,
     id_conteudo integer NOT NULL,
     nota integer NOT NULL,
+    criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_avaliacao PRIMARY KEY (id),
     CONSTRAINT nota_cinco_estrelas CHECK (nota >= 1 AND nota <= 5),
     CONSTRAINT avaliacao_unique_usuario_conteudo UNIQUE (id_usuario, id_conteudo)
@@ -121,6 +129,7 @@ CREATE TABLE IF NOT EXISTS public.categorias
 (
     id serial NOT NULL,
     nome character varying(100) NOT NULL,
+    criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_categoria PRIMARY KEY (id)
 );
 
@@ -129,6 +138,7 @@ CREATE TABLE IF NOT EXISTS public.categorias_conteudos
     id serial NOT NULL,
     id_categoria integer NOT NULL,
     id_conteudo integer NOT NULL,
+    criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_categoria_conteudo PRIMARY KEY (id),
     CONSTRAINT unique_categoria_conteudo UNIQUE (id_categoria, id_conteudo)
 );
