@@ -17,27 +17,27 @@ export interface UsuarioResponseDTO
     id: number,
     nome: string,
     email: string,
-    flagAdministrador: boolean,
-    criadoEm: Date,
+    flag_administrador: boolean,
+    criado_em: Date,
 }
 export class Usuario
 {
     private _id: number;
     private _nome: string;
     private _email: string;
-    private _senhaHash: string;
-    private _flagAdministrador: boolean;
-    private _criadoEm: Date;
+    private _senha_hash: string;
+    private _flag_administrador: boolean;
+    private _criado_em: Date;
 
-    constructor(nome: string, email: string, senhaHash: string, flagAdministrador: boolean, criadoEm?: Date, id?: number)
+    constructor(obj: any)
     {
-        this._id = id ?? 0;
-        this._criadoEm = criadoEm ?? new Date();
-        this._nome = nome;
-        this._email = email;
-        this._senhaHash = senhaHash;
-        this._flagAdministrador = flagAdministrador;
-    }
+        this._id = obj.id ?? 0;
+        this._criado_em = obj.criado_em ?? new Date();
+        this._nome = obj.nome;
+        this._email = obj.email;
+        this._senha_hash = obj.senha_hash;
+        this._flag_administrador = obj.flag_administrador;
+    }    
 
     // Getter e Setter para _id
     public get id(): number {
@@ -58,30 +58,34 @@ export class Usuario
         return this._email;
     }
 
-    // Getter e Setter para _senhaHash
-    public get senhaHash(): string {
-        return this._senhaHash;
+    // Getter e Setter para _senha_hash
+    public get senha_hash(): string {
+        return this._senha_hash;
     }
 
-    public set senhaHash(value: string) {
-        this._senhaHash = value;
+    public set senha_hash(value: string) {
+        this._senha_hash = value;
     }
 
-    // Getter e Setter para _flagAdministrador
-    public get flagAdministrador(): boolean {
-        return this._flagAdministrador;
+    // Getter e Setter para _flag_administrador
+    public get flag_administrador(): boolean {
+        return this._flag_administrador;
     }
 
-    public set flagAdministrador(value: boolean) {
-        this._flagAdministrador = value;
+    public set flag_administrador(value: boolean) {
+        this._flag_administrador = value;
     }
 
-    // Getter e Setter para _criadoEm
-    public get criadoEm(): Date {
-        return this._criadoEm;
+    // Getter e Setter para _criado_em
+    public get criado_em(): Date {
+        return this._criado_em;
     }
 
-    public set criadoEm(value: Date) {
-        this._criadoEm = value;
+    public set criado_em(value: Date) {
+        this._criado_em = value;
     }
 }
+export const SIZE_CONSTRAINTS = Object({
+    "nome": 150,
+    "email": 350,
+})
