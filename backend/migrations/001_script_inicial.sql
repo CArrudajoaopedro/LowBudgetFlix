@@ -142,88 +142,88 @@ CREATE TABLE IF NOT EXISTS public.categorias_conteudos
     CONSTRAINT pk_categoria_conteudo PRIMARY KEY (id),
     CONSTRAINT unique_categoria_conteudo UNIQUE (id_categoria, id_conteudo)
 );
+DO $$ 
+BEGIN 
 
-ALTER TABLE IF EXISTS public.episodios
-    ADD CONSTRAINT fk_episodio_conteudo FOREIGN KEY (id_conteudo)
-    REFERENCES public.conteudos (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_episodio_conteudo') THEN
+        ALTER TABLE IF EXISTS public.episodios
+            ADD CONSTRAINT fk_episodio_conteudo FOREIGN KEY (id_conteudo)
+            REFERENCES public.conteudos (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
 
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_faixa_conteudo') THEN
+        ALTER TABLE IF EXISTS public.faixas
+            ADD CONSTRAINT fk_faixa_conteudo FOREIGN KEY (id_conteudo)
+            REFERENCES public.conteudos (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
 
-ALTER TABLE IF EXISTS public.faixas
-    ADD CONSTRAINT fk_faixa_conteudo FOREIGN KEY (id_conteudo)
-    REFERENCES public.conteudos (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_faixa_episodio') THEN
+        ALTER TABLE IF EXISTS public.faixas
+            ADD CONSTRAINT fk_faixa_episodio FOREIGN KEY (id_episodio)
+            REFERENCES public.episodios (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
 
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_historico_usuario') THEN
+        ALTER TABLE IF EXISTS public.historico_visualizacao
+            ADD CONSTRAINT fk_historico_usuario FOREIGN KEY (id_usuario)
+            REFERENCES public.usuarios (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
 
-ALTER TABLE IF EXISTS public.faixas
-    ADD CONSTRAINT fk_faixa_episodio FOREIGN KEY (id_episodio)
-    REFERENCES public.episodios (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_historico_conteudo') THEN
+        ALTER TABLE IF EXISTS public.historico_visualizacao
+            ADD CONSTRAINT fk_historico_conteudo FOREIGN KEY (id_conteudo)
+            REFERENCES public.conteudos (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
 
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_historico_episodio') THEN
+        ALTER TABLE IF EXISTS public.historico_visualizacao
+            ADD CONSTRAINT fk_historico_episodio FOREIGN KEY (id_episodio)
+            REFERENCES public.episodios (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
 
-ALTER TABLE IF EXISTS public.historico_visualizacao
-    ADD CONSTRAINT fk_historico_usuario FOREIGN KEY (id_usuario)
-    REFERENCES public.usuarios (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_credito_artista') THEN
+        ALTER TABLE IF EXISTS public.creditos
+            ADD CONSTRAINT fk_credito_artista FOREIGN KEY (id_artista)
+            REFERENCES public.artistas (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
 
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_credito_conteudo') THEN
+        ALTER TABLE IF EXISTS public.creditos
+            ADD CONSTRAINT fk_credito_conteudo FOREIGN KEY (id_conteudo)
+            REFERENCES public.conteudos (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
 
-ALTER TABLE IF EXISTS public.historico_visualizacao
-    ADD CONSTRAINT fk_historico_conteudo FOREIGN KEY (id_conteudo)
-    REFERENCES public.conteudos (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_avalacao_usuario') THEN
+        ALTER TABLE IF EXISTS public.avaliacoes
+            ADD CONSTRAINT fk_avalacao_usuario FOREIGN KEY (id_usuario)
+            REFERENCES public.usuarios (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
 
-
-ALTER TABLE IF EXISTS public.historico_visualizacao
-    ADD CONSTRAINT fk_historico_episodio FOREIGN KEY (id_episodio)
-    REFERENCES public.episodios (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
-
-
-ALTER TABLE IF EXISTS public.creditos
-    ADD CONSTRAINT fk_credito_artista FOREIGN KEY (id_artista)
-    REFERENCES public.artistas (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
-
-
-ALTER TABLE IF EXISTS public.creditos
-    ADD CONSTRAINT fk_credito_conteudo FOREIGN KEY (id_conteudo)
-    REFERENCES public.conteudos (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
-
-
-ALTER TABLE IF EXISTS public.avaliacoes
-    ADD CONSTRAINT fk_avalacao_usuario FOREIGN KEY (id_usuario)
-    REFERENCES public.usuarios (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
-
-
-ALTER TABLE IF EXISTS public.avaliacoes
-    ADD CONSTRAINT fk_avaliacao_conteudo FOREIGN KEY (id_conteudo)
-    REFERENCES public.conteudos (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
-
-
-ALTER TABLE IF EXISTS public.categorias_conteudos
-    ADD CONSTRAINT fk_categoria FOREIGN KEY (id_categoria)
-    REFERENCES public.categorias (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
-
-
-ALTER TABLE IF EXISTS public.categorias_conteudos
-    ADD CONSTRAINT fk_conteudo_categoria FOREIGN KEY (id_conteudo)
-    REFERENCES public.conteudos (id) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE CASCADE;
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_avaliacao_conteudo') THEN
+        ALTER TABLE IF EXISTS public.avaliacoes
+            ADD CONSTRAINT fk_avaliacao_conteudo FOREIGN KEY (id_conteudo)
+            REFERENCES public.conteudos (id) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE CASCADE;
+    END IF;
+END $$;
 
 END;
