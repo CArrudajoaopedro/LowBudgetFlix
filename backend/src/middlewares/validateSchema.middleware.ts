@@ -7,7 +7,7 @@ export function validateBodySchema(schema: ZodType)
         try
         {
             req.body = schema.parse(req.body);
-            next();
+            return next();
         }
         catch (error)
         {

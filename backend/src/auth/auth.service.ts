@@ -1,8 +1,13 @@
-import jwt from "jsonwebtoken";
+import jwt, {JwtPayload} from "jsonwebtoken";
 import { NotFoundError, UnauthorizedError } from "../errors/AppErrors";
 import { _assertUsuarioEmailExiste, _assertSenhaValida } from "../usuarios/usuarios.service";
 import { loadConfig } from "../config";
 
+interface UsuarioTokenPayload extends JwtPayload {
+    id: number;
+    email: string;
+    nome: string;
+}
 const config = loadConfig({jwtSecret: true, databaseUrl: false});
 export async function login(email: string, senha: string)
 {
@@ -30,11 +35,11 @@ export async function login(email: string, senha: string)
         }
     }
 }
-export async function authenticate(token: string)
+export function authenticate(token: string)
 {
     try
     {
-        const decoded = jwt.verify(token, config.jwtSecret!);
+        const decoded = jwt.verify(token, config.jwtSecret!) as UsuarioTokenPayload;
         return decoded;
     }
     catch (error)
