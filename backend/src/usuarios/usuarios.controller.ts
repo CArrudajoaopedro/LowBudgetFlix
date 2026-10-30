@@ -76,7 +76,7 @@ export async function getAll(req: Request, res: Response, next: NextFunction)
         next(error);
     }
 }
-export async function updateNome(req: Request, res: Response, next: NextFunction)
+export async function update(req: Request, res: Response, next: NextFunction)
 {
     try
     {
@@ -103,7 +103,7 @@ export async function updateSenha(req: Request, res: Response, next: NextFunctio
     {
         const id = z.coerce.number().int().parse(req.params.id);
         const dto = usuariosEntity.UpdateSenhaUsuarioSchema.parse(req.body);
-        const usuario = await usuarioService.updateSenha(dto.senha, id);
+        const usuario = await usuarioService.updateSenha(dto.senhaAntiga, dto.senhaNova, id);
         res.status(200).json(usuario);
     }
     catch (error)

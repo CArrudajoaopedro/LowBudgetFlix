@@ -7,7 +7,7 @@ export const CreateUsuarioSchema = z.object(
     {
         nome: z.string().min(1).max(SIZE_CONSTRAINTS["nome"]),
         email: z.email().max(SIZE_CONSTRAINTS["email"]),
-        senha: z.string(),
+        senha: z.string().min(8),
     }
 );
 export const UpdateNomeUsuarioSchema = z.object(
@@ -17,7 +17,8 @@ export const UpdateNomeUsuarioSchema = z.object(
 )
 export const UpdateSenhaUsuarioSchema = z.object(
     {
-        senha: z.string(),
+        senhaAntiga: z.string(),
+        senhaNova: z.string().min(8),
     }
 )
 export const UsuarioResponseSchema = z.object(

@@ -1,3 +1,4 @@
+import bcrypt from "bcrypt";
 import * as usuariosEntity from "./usuarios.entity";
 import * as usuariosRepository from "./usuarios.repository";
 import * as appErrors from "../errors/AppErrors";
@@ -28,13 +29,13 @@ async function _assertUsuarioEmailNaoExiste(email: string)
         throw new appErrors.UnprocessableEntityError("Já existe um usuário com esse email.");
     }
 }
-async function _assertLimiteTamanho(valor: string, chave: string)
+async function _assertSenhaValida(senha: string, hash: string)
 {
-    const maxLength: number = usuariosEntity.SIZE_CONSTRAINTS[chave];
-    if (valor.length > maxLength)
+    const valida: boolean = await bcrypt.compare(senha, hash);
+    if (!valida)
     {
-        throw new appErrors.UnprocessableEntityError(`${chave} só pode ter no máximo ${maxLength} caracteres.`);
-    }    
+        throw new appErrors.UnauthorizedError("Senha incorreta.");
+    }
 }
 export async function create(params: usuariosEntity.CreateUsuarioDTO, flag_admin: boolean)
 {
@@ -68,10 +69,11 @@ export async function updateNome(nome: string, id: number)
     const usuarioDTO = usuariosEntity.UsuarioResponseSchema.parse(usuario)
     return usuarioDTO;
 }
-export async function updateSenha(senha: string, id: number)
+export async function updateSenha(senhaAntiga: string, senhaNova: string, id: number)
 {
-    await _assertUsuarioIdExiste(id);
-    const usuario = await usuariosRepository.updateSenha(senha, id);
+    const usuarioSenhaAntiga = await _assertUsuarioIdExiste(id);
+    await _assertSenhaValida(senhaAntiga, usuarioSenhaAntiga.senha_hash);
+    const usuario = await usuariosRepository.updateSenha(senhaNova, id);
     const usuarioDTO = usuariosEntity.UsuarioResponseSchema.parse(usuario)
     return usuarioDTO;
 }

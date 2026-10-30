@@ -6,7 +6,7 @@ router.post("/api/usuarios/admin", usuariosController.createAdmin);
 router.post("/api/usuarios/comum", usuariosController.createComum);
 router.get("/api/usuarios", usuariosController.getAll);
 router.get("/api/usuarios/:id", usuariosController.getById);
-router.put("/api/usuarios/:id/nome", usuariosController.updateNome);
+router.patch("/api/usuarios/:id", usuariosController.update);
 router.put("/api/usuarios/:id/senha", usuariosController.updateSenha);
 router.delete("/api/usuarios/:id", usuariosController.remove);
 export default router;
