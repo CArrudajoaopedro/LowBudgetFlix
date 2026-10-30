@@ -1,25 +1,39 @@
-export interface CreateUsuarioDTO
-{
-    nome: string,
-    email: string,
-    senha: string,
-}
-export interface UpdateNomeUsuarioDTO
-{
-    nome: string,
-}
-export interface UpdateSenhaUsuarioDTO
-{
-    senha: string,
-}
-export interface UsuarioResponseDTO
-{
-    id: number,
-    nome: string,
-    email: string,
-    flag_administrador: boolean,
-    criado_em: Date,
-}
+import * as z from "zod"
+export const SIZE_CONSTRAINTS = Object({
+    "nome": 150,
+    "email": 350,
+})
+export const CreateUsuarioSchema = z.object(
+    {
+        nome: z.string().min(1).max(SIZE_CONSTRAINTS["nome"]),
+        email: z.email().max(SIZE_CONSTRAINTS["email"]),
+        senha: z.string(),
+    }
+);
+export const UpdateNomeUsuarioSchema = z.object(
+    {
+        nome: z.string().min(1).max(SIZE_CONSTRAINTS["nome"]),
+    }
+)
+export const UpdateSenhaUsuarioSchema = z.object(
+    {
+        senha: z.string(),
+    }
+)
+export const UsuarioResponseSchema = z.object(
+    {
+        id: z.number().int(),
+        nome: z.string().min(1).max(SIZE_CONSTRAINTS["nome"]),
+        email: z.email().max(SIZE_CONSTRAINTS["email"]),
+        flag_administrador: z.boolean(),
+        criado_em: z.date(),
+    }
+)
+export type CreateUsuarioDTO = z.infer<typeof CreateUsuarioSchema>;
+export type UpdateNomeUsuarioDTO = z.infer<typeof UpdateNomeUsuarioSchema>
+export type UpdateSenhaUsuarioDTO = z.infer<typeof UpdateSenhaUsuarioSchema>
+export type UsuarioResponseDTO = z.infer<typeof UsuarioResponseSchema>
+
 export class Usuario
 {
     private _id: number;
@@ -85,7 +99,3 @@ export class Usuario
         this._criado_em = value;
     }
 }
-export const SIZE_CONSTRAINTS = Object({
-    "nome": 150,
-    "email": 350,
-})
