@@ -3,6 +3,12 @@ export const SIZE_CONSTRAINTS = Object({
     "nome": 150,
     "email": 350,
 })
+export const UsuarioLoginSchema = z.object(
+    {
+        email: z.email(),
+        senha: z.string(),
+    }
+)
 export const CreateUsuarioSchema = z.object(
     {
         nome: z.string().min(1).max(SIZE_CONSTRAINTS["nome"]),

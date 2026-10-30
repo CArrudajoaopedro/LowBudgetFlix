@@ -12,7 +12,7 @@ async function _assertUsuarioIdExiste(id: number)
     }
     return usuario;
 }
-async function _assertUsuarioEmailExiste(email: string)
+export async function _assertUsuarioEmailExiste(email: string)
 {
     const usuario: usuariosEntity.Usuario | null = await usuariosRepository.getByEmail(email);
     if (!usuario)
@@ -29,7 +29,7 @@ async function _assertUsuarioEmailNaoExiste(email: string)
         throw new appErrors.UnprocessableEntityError("Já existe um usuário com esse email.");
     }
 }
-async function _assertSenhaValida(senha: string, hash: string)
+export async function _assertSenhaValida(senha: string, hash: string)
 {
     const valida: boolean = await bcrypt.compare(senha, hash);
     if (!valida)
