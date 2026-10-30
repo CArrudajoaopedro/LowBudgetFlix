@@ -7,7 +7,8 @@ async function migrate()
 {
     const config = loadConfig({databaseUrl: true, jwtSecret: false});
     const client = new Client({
-        connectionString: config.databaseUrl
+        connectionString: config.databaseUrl,
+        ssl: {rejectUnauthorized: false},
     });
     try
     {
