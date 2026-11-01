@@ -62,7 +62,7 @@ No terminal, execute:
 
 ```bash
 git clone https://github.com/CArrudajoaopedro/LowBudgetFlix.git
-cd backend
+cd LowBudgetFlix/backend
 npm install
 npm exec tsx -- migrate.ts
 npm exec tsx -- src/app.ts
