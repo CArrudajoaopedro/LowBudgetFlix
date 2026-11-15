@@ -2,13 +2,13 @@ import { pool } from "../db";
 import { Conteudo, TipoConteudo } from "./conteudos.entity";
 
 export async function getFilteredPaged(
-    titulo: string | null,
-    sinopse: string | null,
-    tipos: TipoConteudo[] | null,
-    lancamentoInicial: Date | null,
-    lancamentoFinal: Date | null,
-    duracaoMinima: number | null,
-    duracaoMaxima: number | null,
+    titulo: string | null | undefined,
+    sinopse: string | null | undefined,
+    tipo: TipoConteudo | null | undefined,
+    lancamentoInicial: Date | null | undefined,
+    lancamentoFinal: Date | null | undefined,
+    duracaoMinima: number | null | undefined,
+    duracaoMaxima: number | null | undefined,
     skip: number = 0,
     limit: number = 100
 )
@@ -26,17 +26,17 @@ export async function getFilteredPaged(
         filterQueries.push(`sinopse LIKE '%$${filterValues.length + 1}%'`);
         filterValues.push(sinopse);
     }
-    if (tipos != null && tipos.length > 0)
+    if (tipo)
     {
-        filterQueries.push(`tipo IN $${filterValues.length + 1}`);
-        filterValues.push(`(${tipos.join(",")})`);
+        filterQueries.push(`tipo = $${filterValues.length + 1}`);
+        filterValues.push(tipo);
     }
-    if (lancamentoInicial != null)
+    if (lancamentoInicial)
     {
         filterQueries.push(`lancamento >= $${filterValues.length + 1}`);
         filterValues.push(lancamentoInicial);
     }
-    if (lancamentoFinal != null)
+    if (lancamentoFinal)
     {
         filterQueries.push(`lancamento <= $${filterValues.length + 1}`);
         filterValues.push(lancamentoFinal);
@@ -63,6 +63,10 @@ export async function getById(id: number)
 {
     const query = "SELECT * FROM conteudos WHERE id = $1;";
     const result = await pool.query(query, [id]);
+    if (!result.rows[0])
+    {
+        return null;
+    }
     const conteudo = new Conteudo(result.rows[0]);
     return conteudo;
 }
@@ -82,11 +86,11 @@ export async function create(
 }
 export async function update(
     id: number,
-    titulo: string | null,
-    sinopse: string | null,
-    tipo: TipoConteudo | null,
-    lancamento: Date | null,
-    duracao: number | null
+    titulo: string | null | undefined,
+    sinopse: string | null | undefined,
+    tipo: TipoConteudo | null | undefined,
+    lancamento: Date | null | undefined,
+    duracao: number | null | undefined
 )
 {
     const baseQuery = "UPDATE conteudos";

@@ -37,9 +37,9 @@ export const UsuarioResponseSchema = z.object(
     }
 )
 export type CreateUsuarioDTO = z.infer<typeof CreateUsuarioSchema>;
-export type UpdateNomeUsuarioDTO = z.infer<typeof UpdateNomeUsuarioSchema>
-export type UpdateSenhaUsuarioDTO = z.infer<typeof UpdateSenhaUsuarioSchema>
-export type UsuarioResponseDTO = z.infer<typeof UsuarioResponseSchema>
+export type UpdateNomeUsuarioDTO = z.infer<typeof UpdateNomeUsuarioSchema>;
+export type UpdateSenhaUsuarioDTO = z.infer<typeof UpdateSenhaUsuarioSchema>;
+export type UsuarioResponseDTO = z.infer<typeof UsuarioResponseSchema>;
 
 export class Usuario
 {
