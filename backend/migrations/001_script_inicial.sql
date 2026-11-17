@@ -55,7 +55,7 @@ CREATE TABLE IF NOT EXISTS public.episodios
     numero smallint NOT NULL,
     criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_id_episodio PRIMARY KEY (id),
-    CONSTRAINT unq_temp_num_episodio UNIQUE (temporada, numero)
+    CONSTRAINT unq_temp_num_episodio UNIQUE (id_conteudo, temporada, numero)
 );
 
 CREATE TABLE IF NOT EXISTS public.faixas
