@@ -15,7 +15,7 @@ export async function transaction(func: any, ...args: any[])
     try
     {
         await client.query("BEGIN");
-        const result = await func(client, ...args);
+        const result = await func(...args, client);
         await client.query("COMMIT");
         return result;
     }
