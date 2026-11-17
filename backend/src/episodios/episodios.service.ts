@@ -1,18 +1,8 @@
 import * as episodiosRepository from "./episodios.repository";
 import { CreateEpisodioDTO, UpdateEpisodioDTO, QueryEpisodioDTO, EpisodioResponseSchema } from "./episodios.schema";
-import { getById as getConteudoById } from "../conteudos/conteudos.service";
-import { Conteudo } from "../conteudos/conteudos.entity";
-import * as appError from "../errors/AppErrors"
-
-async function _assertEpisodioIdExiste(id: number)
-{
-    const episodio = await episodiosRepository.getById(id);
-    if (!episodio)
-    {
-        throw new appError.NotFoundError("Episódio não encontrado.");
-    }
-    return episodio;
-}
+import { getById as getConteudoById } from "../conteudos/conteudos.repository";
+import { transaction } from "../db";
+import * as appError from "../errors/AppErrors";
 
 async function _assertSerieIdExiste(id: number)
 {
@@ -25,11 +15,15 @@ async function _assertSerieIdExiste(id: number)
 
 export async function getById(id: number)
 {
-    const episodio = await _assertEpisodioIdExiste(id);
+    const episodio = await episodiosRepository.getById(id);
+    if (!episodio)
+    {
+        throw new appError.NotFoundError("Episódio não encontrado.");
+    }
     return EpisodioResponseSchema.parse(episodio);
 }
 
-export async function getBySerie(
+async function _getBySerie(
     id_serie: number,
     dto: QueryEpisodioDTO
 )
@@ -40,7 +34,7 @@ export async function getBySerie(
     return episodios.map((e) => EpisodioResponseSchema.parse(e));
 }
 
-export async function create(dto: CreateEpisodioDTO)
+async function _create(dto: CreateEpisodioDTO)
 {
     const {id_conteudo, titulo, sinopse, lancamento, duracao, temporada, numero} = dto;
     await _assertSerieIdExiste(id_conteudo);
@@ -48,7 +42,7 @@ export async function create(dto: CreateEpisodioDTO)
     return EpisodioResponseSchema.parse(episodio);
 }
 
-export async function update(id: number, dto: UpdateEpisodioDTO)
+async function _update(id: number, dto: UpdateEpisodioDTO)
 {
     const {id_conteudo, titulo, sinopse, lancamento, duracao, temporada, numero} = dto;
     if (id_conteudo)
@@ -59,8 +53,29 @@ export async function update(id: number, dto: UpdateEpisodioDTO)
     return EpisodioResponseSchema.parse(episodio);
 }
 
+export async function getBySerie(
+    id_serie: number,
+    dto: QueryEpisodioDTO
+)
+{
+    return transaction(_getBySerie, id_serie, dto);
+}
+
+export async function create(dto: CreateEpisodioDTO)
+{
+    return await transaction(_create, dto);
+}
+
+export async function update(id: number, dto: UpdateEpisodioDTO)
+{
+    return await transaction(_update, id, dto);
+}
+
 export async function remove(id: number)
 {
-    await _assertEpisodioIdExiste(id);
-    await episodiosRepository.remove(id);
+    const deleted = await episodiosRepository.remove(id);
+    if (!deleted)
+    {
+        throw new appError.NotFoundError("Episódio não encontrado.");
+    }
 }

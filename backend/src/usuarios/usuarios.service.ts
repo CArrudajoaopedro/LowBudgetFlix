@@ -115,5 +115,5 @@ async function _remove(id: number)
 
 export async function remove(id: number)
 {
-    await transaction(remove, id);
+    await transaction(_remove, id);
 }
