@@ -31,7 +31,7 @@ export function validateParamsSchema(schema: ZodType)
     const validateFunction = async (req: Request, res: Response, next: NextFunction) => {
         try
         {
-            req.params = schema.parse(req.params) as ParamsDictionary;
+            res.locals.params = schema.parse(req.params);
             return next();
         }
         catch (error)
@@ -54,7 +54,7 @@ export function validateQuerySchema(schema: ZodType)
     const validateFunction = async (req: Request, res: Response, next: NextFunction) => {
         try
         {
-            req.query = schema.parse(req.query) as ParsedQs;
+            res.locals.query = schema.parse(req.query);
             return next();
         }
         catch (error)

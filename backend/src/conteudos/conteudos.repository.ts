@@ -75,7 +75,7 @@ export async function create(
     sinopse: string,
     tipo: TipoConteudo,
     lancamento: Date,
-    duracao: number
+    duracao: number | null
 )
 {
     const query = "INSERT INTO conteudos (titulo, sinopse, tipo, lancamento, duracao) VALUES ($1, $2, $3, $4, $5) RETURNING *;";
@@ -98,20 +98,20 @@ export async function update(
     let updateQueries = [];
     if (titulo)
     {
-        updateQueries.push(`titulo = '$${updatedValues.length + 1}'`);
+        updateQueries.push(`titulo = $${updatedValues.length + 1}`);
         updatedValues.push(titulo);
     }
     if (sinopse)
     {
-        updateQueries.push(`sinopse = '$${updatedValues.length + 1}'`);
+        updateQueries.push(`sinopse = $${updatedValues.length + 1}`);
         updatedValues.push(sinopse);
     }
-    if (tipo != null)
+    if (tipo)
     {
         updateQueries.push(`tipo = $${updatedValues.length + 1}`);
         updatedValues.push(tipo);
     }
-    if (lancamento != null)
+    if (lancamento)
     {
         updateQueries.push(`lancamento = $${updatedValues.length + 1}`);
         updatedValues.push(lancamento);
@@ -128,7 +128,7 @@ export async function update(
         return conteudo;
     }
     const updateFullQuery = ` SET ${updateQueries.join(",")}`;
-    const query = baseQuery + updateFullQuery + ` WHERE id = $${updatedValues.length + 1};`;
+    const query = baseQuery + updateFullQuery + ` WHERE id = $${updatedValues.length + 1} RETURNING *;`;
     const values = updatedValues.concat([id]);
     const result = await pool.query(query, values);
     const conteudo = new Conteudo(result.rows[0]);

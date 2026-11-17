@@ -16,14 +16,14 @@ export const CreateConteudoSchema = z.object({
     titulo: z.string().min(1).max(200),
     sinopse: z.string().min(1).max(1000),
     tipo: z.enum(["filme", "serie"]),
-    lancamento: z.date(),
-    duracao: z.int().min(1)
+    lancamento: z.coerce.date(),
+    duracao: z.int().nullable()
 });
 
 export const UpdateConteudoSchema = CreateConteudoSchema.partial().refine(
     ({titulo, sinopse, tipo, lancamento, duracao}) => 
         titulo !== undefined || sinopse !== undefined || tipo !== undefined || lancamento !== undefined || duracao !== undefined,
-        { message: "One of the fields must be defined" }
+    { message: "One of the fields must be defined" }
 );
 
 export const ConteudoResponseSchema = z.object({
@@ -32,12 +32,12 @@ export const ConteudoResponseSchema = z.object({
     sinopse: z.string(),
     tipo: z.enum(["filme", "serie"]),
     lancamento: z.date(),
-    duracao: z.int(),
+    duracao: z.int().nullable(),
     criado_em: z.date()
 })
 
 export const IdSchema = z.object({
-    id: z.int()
+    id: z.coerce.number().int()
 })
 
 export type QueryConteudoDTO = z.infer<typeof QueryConteudoSchema>;

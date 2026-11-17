@@ -3,7 +3,7 @@ import * as conteudosSchema from "./conteudos.schema";
 import { Conteudo } from "./conteudos.entity";
 import * as appErrors from "../errors/AppErrors"
 
-async function _assertConteudoIdExiste(id: number) {
+export async function _assertConteudoIdExiste(id: number) {
     const conteudo = await conteudosRepository.getById(id);
     if (!conteudo)
     {
