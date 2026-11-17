@@ -8,3 +8,24 @@ export const pool = new Pool(
         ssl: {rejectUnauthorized: false},
     }
 );
+
+export async function transaction(func: any, ...args: any[])
+{
+    const client = await pool.connect();
+    try
+    {
+        await client.query("BEGIN");
+        const result = await func(client, ...args);
+        await client.query("COMMIT");
+        return result;
+    }
+    catch (e)
+    {
+        await client.query("ROLLBACK");
+        throw e;
+    }
+    finally
+    {
+        client.release();
+    }
+}
