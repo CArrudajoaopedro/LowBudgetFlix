@@ -3,15 +3,6 @@ import * as conteudosSchema from "./conteudos.schema";
 import { Conteudo } from "./conteudos.entity";
 import * as appErrors from "../errors/AppErrors"
 
-export async function _assertConteudoIdExiste(id: number) {
-    const conteudo = await conteudosRepository.getById(id);
-    if (!conteudo)
-    {
-        throw new appErrors.NotFoundError("Conteudo não encontrado.");
-    }
-    return conteudo;
-}
-
 export async function getFilteredPaged(dto: conteudosSchema.QueryConteudoDTO)
 {
     const {titulo, sinopse, tipo, lancamentoInicial, lancamentoFinal, duracaoMinima, duracaoMaxima, skip, limit} = dto;
@@ -32,7 +23,11 @@ export async function getFilteredPaged(dto: conteudosSchema.QueryConteudoDTO)
 
 export async function getById(id: number)
 {
-    const conteudo = await _assertConteudoIdExiste(id);
+    const conteudo = await conteudosRepository.getById(id);
+    if (!conteudo)
+    {
+        throw new appErrors.NotFoundError("Conteúdo não encontrado");
+    }
     const dto = conteudosSchema.ConteudoResponseSchema.parse(conteudo);
     return dto;
 }
@@ -53,7 +48,6 @@ export async function create(dto: conteudosSchema.CreateConteudoDTO)
 
 export async function update(id: number, dto: conteudosSchema.UpdateConteudoDTO)
 {
-    await _assertConteudoIdExiste(id);
     const {titulo, tipo, sinopse, lancamento, duracao} = dto;
     const conteudo = await conteudosRepository.update(
         id,
@@ -63,12 +57,19 @@ export async function update(id: number, dto: conteudosSchema.UpdateConteudoDTO)
         lancamento,
         duracao
     );
+    if (!conteudo)
+    {
+        throw new appErrors.NotFoundError("Conteudo não encontrado.");
+    }
     const responseDTO = conteudosSchema.ConteudoResponseSchema.parse(conteudo);
     return responseDTO;
 }
 
 export async function remove(id: number)
 {
-    await _assertConteudoIdExiste(id);
-    await conteudosRepository.remove(id);
+    const deleted = await conteudosRepository.remove(id);
+    if (!deleted)
+    {
+        throw new appErrors.NotFoundError("Conteudo não encontrado.");
+    }
 }

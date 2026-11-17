@@ -124,18 +124,29 @@ export async function update(
     if (updatedValues.length == 0)
     {
         const result = await pool.query("SELECT * FROM conteudos WHERE id = $1", [id]);
-        const conteudo = new Conteudo(result.rows[0]);
+        if (!result.rowCount)
+        {
+            return null;
+        }
+        const row = result.rows[0]
+        const conteudo = new Conteudo(row);
         return conteudo;
     }
     const updateFullQuery = ` SET ${updateQueries.join(",")}`;
     const query = baseQuery + updateFullQuery + ` WHERE id = $${updatedValues.length + 1} RETURNING *;`;
     const values = updatedValues.concat([id]);
     const result = await pool.query(query, values);
-    const conteudo = new Conteudo(result.rows[0]);
+    if (!result.rowCount)
+    {
+        return null;
+    }
+    const row = result.rows[0]
+    const conteudo = new Conteudo(row);
     return conteudo;
 }
 export async function remove(id: number)
 {
-    const query = "DELETE FROM conteudos WHERE id = $1;";
-    await pool.query(query, [id]);
+    const query = "DELETE FROM conteudos WHERE id = $1 RETURNING id;";
+    const deleted = await pool.query(query, [id]);
+    return deleted.rowCount;
 }

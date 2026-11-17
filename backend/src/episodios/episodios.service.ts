@@ -1,6 +1,6 @@
 import * as episodiosRepository from "./episodios.repository";
 import { CreateEpisodioDTO, UpdateEpisodioDTO, QueryEpisodioDTO, EpisodioResponseSchema } from "./episodios.schema";
-import { _assertConteudoIdExiste } from "../conteudos/conteudos.service";
+import { getById as getConteudoById } from "../conteudos/conteudos.service";
 import { Conteudo } from "../conteudos/conteudos.entity";
 import * as appError from "../errors/AppErrors"
 
@@ -16,8 +16,8 @@ async function _assertEpisodioIdExiste(id: number)
 
 async function _assertSerieIdExiste(id: number)
 {
-    const conteudo = await _assertConteudoIdExiste(id);
-    if (conteudo.tipo != 'serie')
+    const conteudo = await getConteudoById(id);
+    if (!conteudo || conteudo.tipo != 'serie')
     {
         throw new appError.NotFoundError("Série não encontrada");
     }
