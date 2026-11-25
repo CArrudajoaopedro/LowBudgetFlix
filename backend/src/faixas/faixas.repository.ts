@@ -2,7 +2,7 @@ import { Pool, PoolClient } from "pg";
 import { pool } from "../db";
 import { Faixa, TipoFaixa, ResolucaoVideo } from "./faixas.entity";
 
-export async function getShortByConteudo(
+export async function getShortByFilme(
     id_conteudo: number,
     tipo: TipoFaixa | null | undefined,
     resolucao: ResolucaoVideo | null | undefined,

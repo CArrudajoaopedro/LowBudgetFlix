@@ -1,8 +1,11 @@
-import {ZodType, ZodError} from "zod"
+import {ZodType, ZodError, object, coerce} from "zod"
 import { ParamsDictionary } from 'express-serve-static-core';
 import { ParsedQs } from 'qs';
 import { Request, Response, NextFunction } from "express"
 
+export const IdSchema = object({
+    id: coerce.number().int()
+})
 export function validateBodySchema(schema: ZodType)
 {
     const validateFunction = async (req: Request, res: Response, next: NextFunction) => {
