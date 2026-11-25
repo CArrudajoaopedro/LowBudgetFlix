@@ -71,8 +71,21 @@ CREATE TABLE IF NOT EXISTS public.faixas
     criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_id_faixa PRIMARY KEY (id),
     CONSTRAINT faixa_referencia_unica CHECK (
-        (id_episodio IS NULL AND id_conteudo IS NOT NULL) OR (id_episodio IS NOT NULL AND id_conteudo IS NULL)
-        )
+        (id_episodio IS NULL AND id_conteudo IS NOT NULL)
+        OR (id_episodio IS NOT NULL AND id_conteudo IS NULL)
+    ),
+    CONSTRAINT faixa_resolucao_video CHECK (
+        (tipo = 'video' AND resolucao IS NOT NULL)
+        OR (tipo != 'video' AND resolucao IS NULL)
+    ),
+    CONSTRAINT faixa_original_audio CHECK (
+        (tipo = 'audio' AND flag_original IS NOT NULL)
+        OR (tipo != 'audio' AND flag_original IS NULL)
+    ),
+    CONSTRAINT faixa_linguagem CHECK (
+        ((tipo = 'legenda' OR tipo = 'audio') AND linguagem IS NOT NULL)
+        OR (tipo != 'legenda' AND tipo != 'audio' AND linguagem IS NULL)
+    )
 );
 
 CREATE TABLE IF NOT EXISTS public.artistas
