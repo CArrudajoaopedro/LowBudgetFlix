@@ -38,6 +38,7 @@ export const ShortResponseFaixaFilmeSchema = ShortResponseFaixaSchema.extend({
 export const ShortResponseFaixaEpisodioSchema = ShortResponseFaixaSchema.extend({
     id_episodio: z.coerce.number().int()
 })
+export const FullResponseFaixaSchema = z.intersection(z.intersection(ShortResponseFaixaEpisodioSchema, ShortResponseFaixaFilmeSchema), CreateFaixaSchema);
 export const QueryFaixaSchema = BaseFaixaShortSchema.extend({}).partial();
 export type CreateAudioDTO = z.infer<typeof CreateAudioSchema>;
 export type CreateVideoDTO = z.infer<typeof CreateVideoSchema>;

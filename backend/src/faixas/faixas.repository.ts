@@ -109,7 +109,19 @@ export async function create(obj: Faixa, db: Pool | PoolClient = pool)
     }
     catch (err: any)
     {
-        if (err.code === '23514' && err.constraint === 'faixa_referencia_unica')
+        if (err.code === '23503' && err.constraint === 'fk_faixa_conteudo')
+        {
+            const error: any = new Error("MEDIA_NON_EXISTING_EPISODE_REFERENCE");
+            error.code = 'MEDIA_NON_EXISTING_EPISODE_REFERENCE';
+            throw error;
+        }
+        else if (err.code === '23503' && err.constraint === 'fk_faixa_episodio')
+        {
+            const error: any = new Error("MEDIA_NON_EXISTING_CONTENT_REFERENCE");
+            error.code = 'MEDIA_NON_EXISTING_CONTENT_REFERENCE';
+            throw error;
+        }
+        else if (err.code === '23514' && err.constraint === 'faixa_referencia_unica')
         {
             const error: any = new Error("MEDIA_MULTIPLE_REFERENCE");
             error.code = 'MEDIA_MULTIPLE_REFERENCE';
