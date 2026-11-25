@@ -115,6 +115,24 @@ export async function create(obj: Faixa, db: Pool | PoolClient = pool)
             error.code = 'MEDIA_MULTIPLE_REFERENCE';
             throw error;
         }
+        else if (err.code === '23514' && err.constraint === 'faixa_resolucao_video')
+        {
+            const error: any = new Error("MEDIA_VIDEO_RESOLUTION");
+            error.code = 'MEDIA_VIDEO_RESOLUTION';
+            throw error;
+        }
+        else if (err.code === '23514' && err.constraint === 'faixa_original_audio')
+        {
+            const error: any = new Error("MEDIA_ORIGINAL_AUDIO");
+            error.code = 'MEDIA_ORIGINAL_AUDIO';
+            throw error;
+        }
+        else if (err.code === '23514' && err.constraint === 'faixa_linguagem')
+        {
+            const error: any = new Error("MEDIA_LANGUAGE");
+            error.code = 'MEDIA_LANGUAGE';
+            throw error;
+        }
         else
         {
             throw err;
@@ -156,14 +174,42 @@ export async function update(id: number, fields: any, db: Pool | PoolClient = po
     const set_clause = ` SET ${updates.join(', ')}`;
     const where_clause = ` WHERE id = $${values.length}`;
     const return_clause = " RETURNING *;";
-    const query = update_clause + set_clause + where_clause + return_clause;
-    const result = await db.query(query, values);
-    if (!result.rowCount)
-    {
-        return null;
+    try
+    {   
+        const query = update_clause + set_clause + where_clause + return_clause;
+        const result = await db.query(query, values);
+        if (!result.rowCount)
+        {
+            return null;
+        }
+        const faixa = new Faixa(result.rows[0]);
+        return faixa;
     }
-    const faixa = new Faixa(result.rows[0]);
-    return faixa;
+    catch (err: any)
+    {
+        if (err.code === '23514' && err.constraint === 'faixa_resolucao_video')
+        {
+            const error: any = new Error("MEDIA_VIDEO_RESOLUTION");
+            error.code = 'MEDIA_VIDEO_RESOLUTION';
+            throw error;
+        }
+        else if (err.code === '23514' && err.constraint === 'faixa_original_audio')
+        {
+            const error: any = new Error("MEDIA_ORIGINAL_AUDIO");
+            error.code = 'MEDIA_ORIGINAL_AUDIO';
+            throw error;
+        }
+        else if (err.code === '23514' && err.constraint === 'faixa_linguagem')
+        {
+            const error: any = new Error("MEDIA_LANGUAGE");
+            error.code = 'MEDIA_LANGUAGE';
+            throw error;
+        }
+        else
+        {
+            throw err;
+        }
+    }
 }
 
 export async function remove(id: number, db: Pool | PoolClient = pool)
