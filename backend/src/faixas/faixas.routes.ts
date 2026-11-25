@@ -1,0 +1,22 @@
+import * as faixasController from "./faixas.controller";
+import { Router } from "express";
+import { CreateAudioSchema, CreateLegendaSchema, CreateThumbnailSchema, CreateVideoSchema, QueryFaixaSchema, UpdateFaixaSchema } from "./faixas.schema";
+import { IdSchema, validateBodySchema, validateParamsSchema, validateQuerySchema } from "../middlewares/validateSchema.middleware";
+import { requireAuth, requireAdmin } from "../middlewares/auth.middleware";
+import { insertTipo } from "../middlewares/faixas.middleware";
+
+const router = Router();
+router.get("/api/conteudos/:id/faixas", validateParamsSchema(IdSchema), validateQuerySchema(QueryFaixaSchema), requireAuth, faixasController.getByFilme);
+router.get("/api/episodios/:id/faixas", validateParamsSchema(IdSchema), validateQuerySchema(QueryFaixaSchema), requireAuth, faixasController.getByEpisodio);
+router.get("/api/faixas/:id", validateParamsSchema(IdSchema), requireAuth, requireAdmin, faixasController.getById);
+router.post("/api/conteudos/:id/faixas/audio", validateParamsSchema(IdSchema), validateBodySchema(CreateAudioSchema), insertTipo('audio'), requireAuth, requireAdmin, faixasController.createFaixaFilme);
+router.post("/api/episodios/:id/faixas/audio", validateParamsSchema(IdSchema), validateBodySchema(CreateAudioSchema), insertTipo('audio'), requireAuth, requireAdmin, faixasController.createFaixaEpisodio);
+router.post("/api/conteudos/:id/faixas/video", validateParamsSchema(IdSchema), validateBodySchema(CreateVideoSchema), insertTipo('video'), requireAuth, requireAdmin, faixasController.createFaixaFilme);
+router.post("/api/episodios/:id/faixas/video", validateParamsSchema(IdSchema), validateBodySchema(CreateVideoSchema), insertTipo('video'), requireAuth, requireAdmin, faixasController.createFaixaEpisodio);
+router.post("/api/conteudos/:id/faixas/legenda", validateParamsSchema(IdSchema), validateBodySchema(CreateLegendaSchema), insertTipo('legenda'), requireAuth, requireAdmin, faixasController.createFaixaFilme);
+router.post("/api/episodios/:id/faixas/legenda", validateParamsSchema(IdSchema), validateBodySchema(CreateLegendaSchema), insertTipo('legenda'), requireAuth, requireAdmin, faixasController.createFaixaEpisodio);
+router.post("/api/conteudos/:id/faixas/thumbnail", validateParamsSchema(IdSchema), validateBodySchema(CreateThumbnailSchema), insertTipo('thumbnail'), requireAuth, requireAdmin, faixasController.createFaixaFilme);
+router.post("/api/episodios/:id/faixas/thumbnail", validateParamsSchema(IdSchema), validateBodySchema(CreateThumbnailSchema), insertTipo('thumbnail'), requireAuth, requireAdmin, faixasController.createFaixaEpisodio);
+router.patch("/api/faixas/:id", validateParamsSchema(IdSchema), validateBodySchema(UpdateFaixaSchema), requireAuth, requireAdmin, faixasController.update);
+router.delete("/api/faixas/delete/:id", validateParamsSchema(IdSchema), requireAuth, requireAdmin, faixasController.remove);
+export default router;

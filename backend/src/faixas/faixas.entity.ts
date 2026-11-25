@@ -22,22 +22,22 @@ export class Faixa {
 
     constructor(obj: {
         id?: number;
-        id_conteudo: number | null;
-        id_episodio: number | null;
+        id_conteudo?: number | null;
+        id_episodio?: number | null;
         url_faixa: string;
-        linguagem: string | null;
+        linguagem?: string | null;
         tipo: TipoFaixa;
-        resolucao: ResolucaoVideo | null;
+        resolucao?: ResolucaoVideo | null;
         flag_original?: boolean | null;
         criado_em?: Date;
     }) {
         this._id = obj.id ?? 0;
-        this._id_conteudo = obj.id_conteudo;
-        this._id_episodio = obj.id_episodio;
+        this._id_conteudo = obj.id_conteudo ?? null;
+        this._id_episodio = obj.id_episodio ?? null;
         this._url_faixa = obj.url_faixa;
-        this._linguagem = obj.linguagem;
+        this._linguagem = obj.linguagem ?? null;
         this._tipo = obj.tipo;
-        this._resolucao = obj.resolucao;
+        this._resolucao = obj.resolucao ?? null;
         this._flag_original = obj.flag_original ?? false;
         this._criado_em = obj.criado_em ?? new Date();
     }
