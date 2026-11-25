@@ -31,7 +31,7 @@ export async function getByFilme(
     {
         throw new appErrors.NotFoundError("Faixa não encontrada");
     }
-    const faixa = ShortResponseFaixaFilmeSchema.parse(result);
+    const faixa = result.map((f) => ShortResponseFaixaFilmeSchema.parse(f));
     return faixa;
 }
 
@@ -52,7 +52,7 @@ export async function getByEpisodio(
     {
         throw new appErrors.NotFoundError("Faixa não encontrada");
     }
-    const faixa = ShortResponseFaixaEpisodioSchema.parse(result);
+    const faixa = result.map((f) => ShortResponseFaixaEpisodioSchema.parse(f));
     return faixa;
 }
 

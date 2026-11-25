@@ -38,7 +38,7 @@ export class Faixa {
         this._linguagem = obj.linguagem ?? null;
         this._tipo = obj.tipo;
         this._resolucao = obj.resolucao ?? null;
-        this._flag_original = obj.flag_original ?? false;
+        this._flag_original = obj.flag_original ?? null;
         this._criado_em = obj.criado_em ?? new Date();
     }
 
