@@ -96,11 +96,11 @@ export async function getById(id: number, db: Pool | PoolClient = pool)
 export async function create(obj: Faixa, db: Pool | PoolClient = pool)
 {
     const query = `INSERT INTO faixas
-    (id_conteudo, id_episodio, url_faixa, tipo, resolucao, flag_original)
+    (id_conteudo, id_episodio, url_faixa, tipo, resolucao, flag_original, linguagem)
     VALUES
-    ($1, $2, $3, $4, $5, $6)
+    ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;`;
-    const values = [obj.id_conteudo, obj.id_episodio, obj.url_faixa, obj.tipo, obj.resolucao, obj.flag_original];
+    const values = [obj.id_conteudo, obj.id_episodio, obj.url_faixa, obj.tipo, obj.resolucao, obj.flag_original, obj.linguagem];
     try
     {
         const result = await db.query(query, values);
