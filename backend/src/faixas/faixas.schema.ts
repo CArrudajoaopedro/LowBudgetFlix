@@ -25,9 +25,9 @@ export const UpdateFaixaSchema = z.object({
 }).partial().strict();
 export const BaseFaixaShortSchema = z.object({
     tipo: zTipoFaixa,
-    linguagem: zLinguagem,
-    flag_original: z.boolean(),
-    resolucao: zResolucaoVideo
+    linguagem: zLinguagem.nullable(),
+    flag_original: z.boolean().nullable(),
+    resolucao: zResolucaoVideo.nullable()
 });
 const ShortResponseFaixaSchema = BaseFaixaShortSchema.extend({
     id: z.coerce.number().int()
@@ -38,7 +38,11 @@ export const ShortResponseFaixaFilmeSchema = ShortResponseFaixaSchema.extend({
 export const ShortResponseFaixaEpisodioSchema = ShortResponseFaixaSchema.extend({
     id_episodio: z.coerce.number().int()
 })
-export const FullResponseFaixaSchema = z.intersection(z.intersection(ShortResponseFaixaEpisodioSchema, ShortResponseFaixaFilmeSchema), CreateFaixaSchema);
+export const FullResponseFaixaSchema = BaseFaixaShortSchema.extend({
+    url_faixa: zUrlFaixa,
+    id_conteudo: z.coerce.number().int().nullable(),
+    id_episodio: z.coerce.number().int().nullable()
+})
 export const QueryFaixaSchema = BaseFaixaShortSchema.extend({}).partial();
 export type CreateAudioDTO = z.infer<typeof CreateAudioSchema>;
 export type CreateVideoDTO = z.infer<typeof CreateVideoSchema>;
