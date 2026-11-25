@@ -127,16 +127,6 @@ export async function update(id: number, fields: any, db: Pool | PoolClient = po
     const update_clause = "UPDATE faixas";
     const values = [];
     const updates = [];
-    if (fields.id_episodio)
-    {
-        values.push(fields.id_episodio);
-        updates.push(`id_episodio = $${values.length}`);
-    }
-    if (fields.id_conteudo)
-    {
-        values.push(fields.id_conteudo);
-        updates.push(`id_conteudo = $${values.length}`);
-    }
     if (fields.url_faixa)
     {
         values.push(fields.url_faixa);
