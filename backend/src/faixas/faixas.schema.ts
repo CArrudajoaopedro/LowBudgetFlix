@@ -24,18 +24,16 @@ export const UpdateFaixaSchema = z.object({
     resolucao: zResolucaoVideo
 }).partial().strict();
 export const BaseFaixaShortSchema = z.object({
+    id: z.coerce.number().int(),
     tipo: zTipoFaixa,
     linguagem: zLinguagem.nullable(),
     flag_original: z.boolean().nullable(),
     resolucao: zResolucaoVideo.nullable()
 });
-const ShortResponseFaixaSchema = BaseFaixaShortSchema.extend({
-    id: z.coerce.number().int()
-})
-export const ShortResponseFaixaFilmeSchema = ShortResponseFaixaSchema.extend({
+export const ShortResponseFaixaFilmeSchema = BaseFaixaShortSchema.extend({
     id_conteudo: z.coerce.number().int()
 })
-export const ShortResponseFaixaEpisodioSchema = ShortResponseFaixaSchema.extend({
+export const ShortResponseFaixaEpisodioSchema = BaseFaixaShortSchema.extend({
     id_episodio: z.coerce.number().int()
 })
 export const FullResponseFaixaSchema = BaseFaixaShortSchema.extend({
