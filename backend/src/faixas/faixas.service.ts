@@ -119,13 +119,35 @@ export async function create(dto: Faixa)
 
 export async function update(id: number, dto: UpdateFaixaDTO)
 {
-    const result = await faixasRepository.update(id, dto);
-    if (!result)
-    {
-        throw new appErrors.NotFoundError("Faixa não encontrada");
+    try
+    {   
+        const result = await faixasRepository.update(id, dto);
+        if (!result)
+        {
+            throw new appErrors.NotFoundError("Faixa não encontrada");
+        }
+        const faixa = FullResponseFaixaSchema.parse(result);
+        return faixa;
     }
-    const faixa = FullResponseFaixaSchema.parse(result);
-    return faixa;
+    catch (err: any)
+    {
+        if (err.code === 'MEDIA_VIDEO_RESOLUTION')
+        {
+            throw new appErrors.UnprocessableEntityError("Faixas de vídeo devem ter resolução e são as únicas que podem");
+        }
+        else if (err.code === 'MEDIA_ORIGINAL_AUDIO')
+        {
+            throw new appErrors.UnprocessableEntityError("Faixas de audio devem ter flag_original e são as únicas que podem");
+        }
+        else if (err.code === 'MEDIA_LANGUAGE')
+        {
+            throw new appErrors.UnprocessableEntityError("Faixas de audio e legenda devem ter linguagem e são as únicas que podem");
+        }
+        else
+        {
+            throw err;
+        }
+    }
 }
 
 export async function remove(id: number)
