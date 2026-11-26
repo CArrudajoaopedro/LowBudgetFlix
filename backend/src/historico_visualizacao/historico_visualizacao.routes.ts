@@ -5,7 +5,7 @@ import { IdSchema, validateBodySchema, validateParamsSchema, validateQuerySchema
 import { requireAuth, requireAdmin } from "../middlewares/auth.middleware";
 
 const router = Router();
-router.put("/api/conteudos/:id/historico", validateParamsSchema(IdSchema), validateBodySchema(UpsertHistoricoSchema), requireAuth, requireAdmin, historicoController.upsertByConteudo);
-router.put("/api/episodios/:id/historico", validateParamsSchema(IdSchema), validateBodySchema(UpsertHistoricoSchema), requireAuth, requireAdmin, historicoController.upsertByEpisodio);
+router.put("/api/conteudos/:id/historico", validateParamsSchema(IdSchema), validateBodySchema(UpsertHistoricoSchema), requireAuth, historicoController.upsertByConteudo);
+router.put("/api/episodios/:id/historico", validateParamsSchema(IdSchema), validateBodySchema(UpsertHistoricoSchema), requireAuth, historicoController.upsertByEpisodio);
 router.delete("/api/historico/:id", validateParamsSchema(IdSchema), requireAuth, requireAdmin, historicoController.remove);
 export default router;

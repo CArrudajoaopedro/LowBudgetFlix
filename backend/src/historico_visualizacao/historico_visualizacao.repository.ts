@@ -17,9 +17,9 @@ export async function upsert(obj: HistoricoVisualizacao, db: Pool | PoolClient =
     ${insert_fields}
     VALUES
     ($1, $2, $3)
-    ON CONFILCT ON ${constraint}
+    ON CONFLICT ON CONSTRAINT ${constraint}
     DO UPDATE SET
-    progresso = EXCLUDED.progresso
+    progresso = EXCLUDED.progresso,
     atualizado_em = EXCLUDED.atualizado_em
     RETURNING *;`;
     try
