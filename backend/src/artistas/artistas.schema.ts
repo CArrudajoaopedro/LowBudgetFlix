@@ -7,7 +7,7 @@ export const QueryArtistaSchema = z.object({
 }).partial()
 export const CreateArtistaSchema = z.object({
     nome: z.string().min(1).max(100),
-    nascimento: z.date().max(new Date()),
+    nascimento: z.coerce.date().max(new Date()),
     nacionalidade: z.string().min(3).max(3),
     url_foto: z.url().max(2048).nullable()
 })

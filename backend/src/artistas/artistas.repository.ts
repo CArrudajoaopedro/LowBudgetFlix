@@ -4,7 +4,7 @@ import { Artista } from "./artistas.entity";
 
 export async function create(obj: Artista, db: Pool | PoolClient = pool)
 {
-    const query = `INSET INTO artistas
+    const query = `INSERT INTO artistas
     (nome, nascimento, nacionalidade, url_foto)
     VALUES
     ($1, $2, $3, $4)
