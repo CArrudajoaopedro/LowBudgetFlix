@@ -37,8 +37,8 @@ export async function create(nome: string, db: Pool | PoolClient = pool)
 
 export async function update(id: number, nome: string, db: Pool | PoolClient = pool)
 {
-    const query = "UPDATE categorias SET nome = $1 RETURNING *;";
-    const values = [nome];
+    const query = "UPDATE categorias SET nome = $1 WHERE id = $2 RETURNING *;";
+    const values = [nome, id];
     const result = await db.query(query, values);
     if (!result.rowCount)
     {
