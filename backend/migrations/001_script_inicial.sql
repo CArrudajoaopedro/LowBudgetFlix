@@ -70,6 +70,10 @@ CREATE TABLE IF NOT EXISTS public.faixas
     flag_original boolean DEFAULT False,
     criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_id_faixa PRIMARY KEY (id),
+    CONSTRAINT faixa_unica_resolucao_conteudo UNIQUE(id_conteudo, resolucao),
+    CONSTRAINT faixa_unica_resolucao_episodio UNIQUE(id_episodio, resolucao),
+    CONSTRAINT faixa_unica_linguagem_tipo_conteudo UNIQUE(id_conteudo, tipo, linguagem),
+    CONSTRAINT faixa_unica_linguagem_tipo_episodio UNIQUE(id_episodio, tipo, linguagem),
     CONSTRAINT faixa_referencia_unica CHECK (
         (id_episodio IS NULL AND id_conteudo IS NOT NULL)
         OR (id_episodio IS NOT NULL AND id_conteudo IS NULL)
@@ -237,6 +241,18 @@ BEGIN
             REFERENCES public.conteudos (id) MATCH SIMPLE
             ON UPDATE NO ACTION
             ON DELETE CASCADE;
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_cat_cont_categoria') THEN
+    ALTER TABLE public.categorias_conteudos
+        ADD CONSTRAINT fk_cat_cont_categoria FOREIGN KEY (id_categoria)
+        REFERENCES public.categorias (id) ON DELETE CASCADE;
+    END IF;
+
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_cat_cont_conteudo') THEN
+        ALTER TABLE public.categorias_conteudos
+            ADD CONSTRAINT fk_cat_cont_conteudo FOREIGN KEY (id_conteudo)
+            REFERENCES public.conteudos (id) ON DELETE CASCADE;
     END IF;
 END $$;
 
