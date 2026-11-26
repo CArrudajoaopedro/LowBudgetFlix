@@ -10,16 +10,16 @@ export class HistoricoVisualizacao {
     constructor(obj: {
         id?: number;
         id_usuario: number;
-        id_conteudo: number | null;
-        id_episodio: number | null;
+        id_conteudo?: number | null;
+        id_episodio?: number | null;
         progresso: number;
         atualizado_em?: Date;
         criado_em?: Date;
     }) {
         this._id = obj.id ?? 0;
         this._id_usuario = obj.id_usuario;
-        this._id_conteudo = obj.id_conteudo;
-        this._id_episodio = obj.id_episodio;
+        this._id_conteudo = obj.id_conteudo ?? null;
+        this._id_episodio = obj.id_episodio ?? null;
         this._progresso = obj.progresso;
         this._atualizado_em = obj.atualizado_em ?? new Date();
         this._criado_em = obj.criado_em ?? new Date();

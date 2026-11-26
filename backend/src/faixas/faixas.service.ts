@@ -5,7 +5,7 @@ import { getById as getConteudoById } from "../conteudos/conteudos.repository";
 import { Faixa } from "./faixas.entity";
 import { transaction } from "../db";
 
-async function _assertFilmeIdExiste(id: number)
+export async function _assertFilmeIdExiste(id: number)
 {
     const conteudo = await getConteudoById(id);
     if (!conteudo || conteudo.tipo !== 'filme')
