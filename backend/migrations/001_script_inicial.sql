@@ -94,7 +94,7 @@ CREATE TABLE IF NOT EXISTS public.artistas
     nome character varying(100) NOT NULL,
     nascimento date NOT NULL,
     nacionalidade character(3) NOT NULL,
-    foto bytea NULL,
+    url_foto character varying(2048) NULL,
     criado_em timestamptz NOT NULL DEFAULT now(),
     CONSTRAINT pk_id_artista PRIMARY KEY (id)
 );

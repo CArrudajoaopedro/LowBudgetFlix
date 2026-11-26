@@ -7,6 +7,6 @@ import { requireAdmin, requireAuth } from "../middlewares/auth.middleware";
 const router = Router();
 router.get("/api/categorias", validateQuerySchema(QueryCategoriaSchema), requireAuth, categoriasController.getFilteredPaged);
 router.post("/api/categorias", validateBodySchema(CreateCategoriaSchema), requireAuth, requireAdmin, categoriasController.create);
-router.patch("/api/categorias/:id", validateParamsSchema(IdSchema), requireAuth, requireAdmin, categoriasController.update);
+router.patch("/api/categorias/:id", validateParamsSchema(IdSchema), validateBodySchema(UpdateCategoriaSchema), requireAuth, requireAdmin, categoriasController.update);
 router.delete("/api/categorias/:id", validateParamsSchema(IdSchema), requireAuth, requireAdmin, categoriasController.remove);
 export default router;
