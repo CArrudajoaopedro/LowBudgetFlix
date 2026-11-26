@@ -18,13 +18,13 @@ export async function getFilteredPaged(
     let filterQueries = [];
     if (titulo)
     {
-        filterQueries.push(`titulo LIKE '%$${filterValues.length + 1}%'`);
-        filterValues.push(titulo);
+        filterQueries.push(`titulo ILIKE $${filterValues.length + 1}`);
+        filterValues.push(`%${titulo}%`);
     }
     if (sinopse)
     {
-        filterQueries.push(`sinopse LIKE '%$${filterValues.length + 1}%'`);
-        filterValues.push(sinopse);
+        filterQueries.push(`sinopse ILIKE $${filterValues.length + 1}`);
+        filterValues.push(`%${sinopse}%`);
     }
     if (tipo)
     {
