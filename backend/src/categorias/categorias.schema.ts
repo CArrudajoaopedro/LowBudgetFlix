@@ -4,7 +4,7 @@ export const QueryCategoriaSchema = z.object({
     nome: z.string(),
     skip: z.coerce.number().int().default(0),
     limit: z.coerce.number().int().default(100)
-})
+}).partial()
 export const CreateCategoriaSchema = z.object({
     nome: z.string().min(1).max(100)
 })
