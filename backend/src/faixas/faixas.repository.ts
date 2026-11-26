@@ -145,6 +145,30 @@ export async function create(obj: Faixa, db: Pool | PoolClient = pool)
             error.code = 'MEDIA_LANGUAGE';
             throw error;
         }
+        else if (err.code === '23505' && err.constraint === 'faixa_unica_resolucao_conteudo')
+        {
+            const error: any = new Error("MEDIA_MULTIPLE_VIDEO_PER_MOVIE_RESOLUTION");
+            error.code = 'MEDIA_MULTIPLE_VIDEO_PER_MOVIE_RESOLUTION';
+            throw error;
+        }
+        else if (err.code === '23505' && err.constraint === 'faixa_unica_resolucao_episodio')
+        {
+            const error: any = new Error("MEDIA_MULTIPLE_VIDEO_PER_EPISODE_RESOLUTION");
+            error.code = 'MEDIA_MULTIPLE_VIDEO_PER_EPISODE_RESOLUTION';
+            throw error;
+        }
+        else if (err.code === '23505' && err.constraint === 'faixa_unica_linguagem_tipo_conteudo')
+        {
+            const error: any = new Error("MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_MOVIE_RESOLUTION");
+            error.code = 'MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_MOVIE_RESOLUTION';
+            throw error;
+        }
+        else if (err.code === '23505' && err.constraint === 'faixa_unica_linguagem_tipo_episodio')
+        {
+            const error: any = new Error("MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_EPISODE_RESOLUTION");
+            error.code = 'MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_EPISODE_RESOLUTION';
+            throw error;
+        }
         else
         {
             throw err;
@@ -215,6 +239,30 @@ export async function update(id: number, fields: any, db: Pool | PoolClient = po
         {
             const error: any = new Error("MEDIA_LANGUAGE");
             error.code = 'MEDIA_LANGUAGE';
+            throw error;
+        }
+        else if (err.code === '23505' && err.constraint === 'faixa_unica_resolucao_conteudo')
+        {
+            const error: any = new Error("MEDIA_MULTIPLE_VIDEO_PER_MOVIE_RESOLUTION");
+            error.code = 'MEDIA_MULTIPLE_VIDEO_PER_MOVIE_RESOLUTION';
+            throw error;
+        }
+        else if (err.code === '23505' && err.constraint === 'faixa_unica_resolucao_episodio')
+        {
+            const error: any = new Error("MEDIA_MULTIPLE_VIDEO_PER_EPISODE_RESOLUTION");
+            error.code = 'MEDIA_MULTIPLE_VIDEO_PER_EPISODE_RESOLUTION';
+            throw error;
+        }
+        else if (err.code === '23505' && err.constraint === 'faixa_unica_linguagem_tipo_conteudo')
+        {
+            const error: any = new Error("MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_MOVIE_RESOLUTION");
+            error.code = 'MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_MOVIE_RESOLUTION';
+            throw error;
+        }
+        else if (err.code === '23505' && err.constraint === 'faixa_unica_linguagem_tipo_episodio')
+        {
+            const error: any = new Error("MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_EPISODE_RESOLUTION");
+            error.code = 'MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_EPISODE_RESOLUTION';
             throw error;
         }
         else

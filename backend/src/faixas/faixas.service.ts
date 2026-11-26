@@ -143,6 +143,22 @@ export async function update(id: number, dto: UpdateFaixaDTO)
         {
             throw new appErrors.UnprocessableEntityError("Faixas de audio e legenda devem ter linguagem e são as únicas que podem");
         }
+        else if (err.code === 'MEDIA_MULTIPLE_VIDEO_PER_MOVIE_RESOLUTION')
+        {
+            throw new appErrors.ConflictError("Só é permitido um vídeo por resuloção para um filme");
+        }
+        else if (err.code === 'MEDIA_MULTIPLE_VIDEO_PER_EPISODE_RESOLUTION')
+        {
+            throw new appErrors.ConflictError("Só é permitido um vídeo por resuloção para um episodio");
+        }
+        else if (err.code === 'MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_MOVIE_RESOLUTION')
+        {
+            throw new appErrors.ConflictError("Só é permitido uma legenda e um audio para cada linguagem para um filme");
+        }
+        else if (err.code === 'MEDIA_MULTIPLE_AUDIO_OR_SUBTITLE_PER_EPISODE_RESOLUTION')
+        {
+            throw new appErrors.ConflictError("Só é permitido uma legenda e um audio para cada linguagem para um episodio");
+        }
         else
         {
             throw err;
