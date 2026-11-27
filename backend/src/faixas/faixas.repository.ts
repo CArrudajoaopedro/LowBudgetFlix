@@ -2,7 +2,7 @@ import { Pool, PoolClient } from "pg";
 import { pool } from "../db";
 import { Faixa, TipoFaixa, ResolucaoVideo } from "./faixas.entity";
 
-export async function getShortByFilme(
+export async function getByFilme(
     id_conteudo: number,
     tipo: TipoFaixa | null | undefined,
     resolucao: ResolucaoVideo | null | undefined,
@@ -11,7 +11,7 @@ export async function getShortByFilme(
     db: Pool | PoolClient = pool
 )
 {
-    const select_clause = "SELECT id, id_conteudo, tipo, linguagem, resolucao, flag_original FROM faixas";
+    const select_clause = "SELECT * FROM faixas";
     const filter_values: any[] = [id_conteudo];
     const conditionals: string[] = ["id_conteudo = $1"];
     if (tipo)
@@ -37,11 +37,11 @@ export async function getShortByFilme(
     const where_clause = ` WHERE ${conditionals.join(" AND ")}`;
     const query = select_clause + where_clause + ';';
     const result = await db.query(query, filter_values);
-    const faixas = result.rows;
+    const faixas = result.rows.map((f) => new Faixa(f));
     return faixas;
 }
 
-export async function getShortByEpisodio(
+export async function getByEpisodio(
     id_episodio: number,
     tipo: TipoFaixa | null | undefined,
     resolucao: ResolucaoVideo | null | undefined,
@@ -50,7 +50,7 @@ export async function getShortByEpisodio(
     db = pool
 )
 {
-    const select_clause = "SELECT id, id_episodio, tipo, linguagem, resolucao, flag_original FROM faixas";
+    const select_clause = "SELECT * FROM faixas";
     const filter_values: any[] = [id_episodio];
     const conditionals: string[] = ["id_episodio = $1"];
     if (tipo)
@@ -76,7 +76,7 @@ export async function getShortByEpisodio(
     const where_clause = ` WHERE ${conditionals.join(" AND ")}`;
     const query = select_clause + where_clause + ';';
     const result = await db.query(query, filter_values);
-    const faixas = result.rows;
+    const faixas = result.rows.map((f) => new Faixa(f));
     return faixas;
 }
 

@@ -1,18 +1,9 @@
 import { QueryFaixaDTO, ShortResponseFaixaEpisodioSchema, ShortResponseFaixaFilmeSchema, FullResponseFaixaSchema, UpdateFaixaDTO } from "./faixas.schema";
 import * as faixasRepository from "./faixas.repository";
 import * as appErrors from "../errors/AppErrors";
-import { getById as getConteudoById } from "../conteudos/conteudos.repository";
+import { _assertFilmeIdExiste } from "../conteudos/conteudos.service";
 import { Faixa } from "./faixas.entity";
 import { transaction } from "../db";
-
-export async function _assertFilmeIdExiste(id: number)
-{
-    const conteudo = await getConteudoById(id);
-    if (!conteudo || conteudo.tipo !== 'filme')
-    {
-        throw new appErrors.NotFoundError("Filme não encontrado");
-    }
-}
 
 export async function getByFilme(
     id_conteudo: number,
@@ -20,7 +11,7 @@ export async function getByFilme(
 )
 {
     const {tipo, resolucao, linguagem, flag_original} = dto;
-    const result = await faixasRepository.getShortByFilme(
+    const result = await faixasRepository.getByFilme(
         id_conteudo,
         tipo,
         resolucao,
@@ -41,7 +32,7 @@ export async function getByEpisodio(
 )
 {
     const {tipo, resolucao, linguagem, flag_original} = dto;
-    const result = await faixasRepository.getShortByEpisodio(
+    const result = await faixasRepository.getByEpisodio(
         id_episodio,
         tipo,
         resolucao,

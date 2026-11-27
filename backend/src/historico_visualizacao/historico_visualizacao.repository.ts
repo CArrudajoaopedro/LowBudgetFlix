@@ -49,6 +49,30 @@ export async function upsert(obj: HistoricoVisualizacao, db: Pool | PoolClient =
     }
 }
 
+export async function getByUsuarioFilme(id_usuario: number, id_conteudo: number)
+{
+    const query = "SELECT * FROM historico_visualizacao WHERE id_usuario = $1 AND id_conteudo = $2;";
+    const result = await pool.query(query, [id_usuario, id_conteudo]);
+    if (!result.rows[0])
+    {
+        return null;
+    }
+    const historico = new HistoricoVisualizacao(result.rows[0]);
+    return historico;
+}
+
+export async function getByUsuarioEpisodio(id_usuario: number, id_episodio: number)
+{
+    const query = "SELECT * FROM historico_visualizacao WHERE id_usuario = $1 AND id_episodio = $2;";
+    const result = await pool.query(query, [id_usuario, id_episodio]);
+    if (!result.rows[0])
+    {
+        return null;
+    }
+    const historico = new HistoricoVisualizacao(result.rows[0]);
+    return historico;
+}
+
 export async function remove(id: number, db: Pool | PoolClient = pool)
 {
     const query = "DELETE FROM historico_visualizacao WHERE id = $1 RETURNING id";

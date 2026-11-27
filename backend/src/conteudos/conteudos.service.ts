@@ -1,7 +1,43 @@
 import * as conteudosRepository from "./conteudos.repository";
 import * as conteudosSchema from "./conteudos.schema";
-import { Conteudo } from "./conteudos.entity";
 import * as appErrors from "../errors/AppErrors"
+import { getByUsuarioFilme as getHistorico } from "../historico_visualizacao/historico_visualizacao.repository";
+import { getByFilme as getFaixas } from "../faixas/faixas.repository";
+import { Conteudo } from "./conteudos.entity";
+import { Faixa } from "../faixas/faixas.entity";
+
+export async function _assertFilmeIdExiste(id: number)
+{
+    const conteudo = await conteudosRepository.getById(id);
+    if (!conteudo || conteudo.tipo !== 'filme')
+    {
+        throw new appErrors.NotFoundError("Filme não encontrado");
+    }
+    return conteudo;
+}
+
+export async function getManifestoFilme(id_conteudo: number, id_usuario: number)
+{
+    const conteudo = await _assertFilmeIdExiste(id_conteudo);
+    const [historico, faixas] = await Promise.all([
+        getHistorico(id_usuario, id_conteudo),
+        getFaixas(id_conteudo, null, null, null, null)
+    ])
+    const faixas_dict: Record<string, Faixa[]> = {"video":  [], "audio": [], "legenda": [], "thumbnail": []};
+    for (let i = 0; i < faixas.length; i++)
+    {
+        faixas_dict[faixas[i].tipo].push(faixas[i]);
+    }
+    return {
+        conteudo: {
+            id: conteudo.id,
+            titulo: conteudo.titulo,
+            duracao: conteudo.duracao,
+        },
+        progresso_atual: historico ? historico.progresso : 0,
+        faixas: faixas_dict,
+    };
+}
 
 export async function getFilteredPaged(dto: conteudosSchema.QueryConteudoDTO)
 {

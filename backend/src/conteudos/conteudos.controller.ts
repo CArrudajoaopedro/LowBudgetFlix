@@ -15,6 +15,14 @@ export async function getById(req: Request, res: Response, next: NextFunction)
     res.status(200).json(conteudo);
 }
 
+export async function getManifestoFilme(req: Request, res: Response, next: NextFunction)
+{
+    const id_conteudo = res.locals.params.id;
+    const id_usuario = req.user!.id;
+    const payload = await conteudosService.getManifestoFilme(id_conteudo, id_usuario);
+    res.status(200).json(payload);
+}
+
 export async function create(req: Request, res: Response, next: NextFunction)
 {
     const dto = req.body;

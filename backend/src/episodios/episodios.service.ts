@@ -1,8 +1,12 @@
 import * as episodiosRepository from "./episodios.repository";
+import * as appError from "../errors/AppErrors";
 import { CreateEpisodioDTO, UpdateEpisodioDTO, QueryEpisodioDTO, EpisodioResponseSchema } from "./episodios.schema";
 import { getById as getConteudoById } from "../conteudos/conteudos.repository";
 import { transaction } from "../db";
-import * as appError from "../errors/AppErrors";
+import { Faixa } from "../faixas/faixas.entity";
+import { getByUsuarioEpisodio as getHistorico } from "../historico_visualizacao/historico_visualizacao.repository";
+import { getByEpisodio as getFaixas } from "../faixas/faixas.repository";
+import { getById as getConteudo } from "../conteudos/conteudos.repository";
 
 async function _assertSerieIdExiste(id: number)
 {
@@ -59,6 +63,40 @@ export async function getBySerie(
 )
 {
     return transaction(_getBySerie, id_serie, dto);
+}
+
+export async function getManifestoEpisodio(id_episodio: number, id_usuario: number)
+{
+    const episodio = await episodiosRepository.getById(id_episodio);
+    if (!episodio)
+    {
+        throw new appError.NotFoundError("Episodio não encontrado.");
+    }
+    const conteudo = await getConteudo(episodio.id_conteudo);
+    const [historico, faixas] = await Promise.all([
+        getHistorico(id_usuario, id_episodio),
+        getFaixas(id_episodio, null, null, null, null)
+    ]);
+    const faixas_dict: Record<string, Faixa[]> = {"video":  [], "audio": [], "legenda": [], "thumbnail": []};
+    for (let i = 0; i < faixas.length; i++)
+    {
+        faixas_dict[faixas[i].tipo].push(faixas[i]);
+    }
+    return {
+        episodio: {
+            conteudo: {
+            id: conteudo!.id,
+            titulo: conteudo!.titulo
+            },
+            titulo: episodio.titulo,
+            sinopse: episodio.sinopse,
+            duracao: episodio.duracao,
+            temporada: episodio.temporada,
+            numero: episodio.numero
+        },
+        progresso_atual: historico ? historico.progresso : 0,
+        faixas: faixas_dict,
+    };
 }
 
 export async function create(dto: CreateEpisodioDTO)

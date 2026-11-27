@@ -16,6 +16,14 @@ export async function getBySerie(req: Request, res: Response, next: NextFunction
     res.status(200).json(episodios);
 }
 
+export async function getManifestoEpisodio(req: Request, res: Response, next: NextFunction)
+{
+    const id_conteudo = res.locals.params.id;
+    const id_usuario = req.user!.id;
+    const payload = await episodiosService.getManifestoEpisodio(id_conteudo, id_usuario);
+    res.status(200).json(payload);
+}
+
 export async function create(req: Request, res: Response, next: NextFunction)
 {
     const payload = req.body;

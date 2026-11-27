@@ -1,6 +1,6 @@
 import * as historicoRepository from "./historico_visualizacao.repository";
 import * as appErrors from "../errors/AppErrors";
-import { _assertFilmeIdExiste } from "../faixas/faixas.service";
+import { _assertFilmeIdExiste } from "../conteudos/conteudos.service";
 import { transaction } from "../db";
 import { UpsertHistoricoDTO } from "./historico_visualizacao.schema";
 import { HistoricoVisualizacao } from "./historico_visualizacao.entity";

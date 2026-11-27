@@ -6,6 +6,7 @@ import { QueryEpisodioSchema, UpdateEpisodioSchema, CreateEpisodioSchema, IdSche
 
 const router = Router();
 router.get("/api/episodios/:id", validateParamsSchema(IdSchema), requireAuth, episodiosController.getById);
+router.get("/api/episodios/:id/assistir", validateParamsSchema(IdSchema), requireAuth, episodiosController.getManifestoEpisodio);
 router.get("/api/episodios/serie/:id", validateParamsSchema(IdSchema), validateQuerySchema(QueryEpisodioSchema), requireAuth, episodiosController.getBySerie);
 router.post("/api/episodios", validateBodySchema(CreateEpisodioSchema), requireAuth, requireAdmin, episodiosController.create);
 router.patch("/api/episodios/:id", validateParamsSchema(IdSchema), validateBodySchema(UpdateEpisodioSchema), requireAuth, requireAdmin, episodiosController.update);
