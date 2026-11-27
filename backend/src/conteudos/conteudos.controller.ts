@@ -23,11 +23,27 @@ export async function getManifestoFilme(req: Request, res: Response, next: NextF
     res.status(200).json(payload);
 }
 
+export async function getCategorias(req: Request, res: Response, next: NextFunction)
+{
+    const id = res.locals.params.id;
+    const {skip, limit} = res.locals.query;
+    const categorias = await conteudosService.getCategorias(id, skip, limit);
+    res.status(200).json(categorias);
+}
+
 export async function create(req: Request, res: Response, next: NextFunction)
 {
     const dto = req.body;
     const conteudo = await conteudosService.create(dto);
     res.status(201).json(conteudo);
+}
+
+export async function insertCategoria(req: Request, res: Response, next: NextFunction)
+{
+    const id_conteudo = res.locals.params.id;
+    const id_categoria = req.body.id_categoria;
+    await conteudosService.insertCategoria(id_conteudo, id_categoria);
+    res.status(204).end();
 }
 
 export async function update(req: Request, res: Response, next: NextFunction)
@@ -36,6 +52,14 @@ export async function update(req: Request, res: Response, next: NextFunction)
     const dto = req.body;
     const conteudo = await conteudosService.update(id, dto);
     res.status(200).json(conteudo);
+}
+
+export async function removeCategoria(req: Request, res: Response, next: NextFunction)
+{
+    const id_conteudo = res.locals.params.id;
+    const id_categoria = req.body.id_categoria;
+    await conteudosService.removeCategoria(id_conteudo, id_categoria);
+    res.status(204).end();
 }
 
 export async function remove(req: Request, res: Response, next: NextFunction)

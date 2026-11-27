@@ -8,6 +8,14 @@ export async function getFilteredPaged(req: Request, res: Response, next: NextFu
     res.status(200).json(categorias);
 }
 
+export async function getConteudos(req: Request, res: Response, next: NextFunction)
+{
+    const id = res.locals.params.id;
+    const {skip, limit} = res.locals.query;
+    const conteudos = await categoriasService.getConteudos(id, skip, limit);
+    res.status(200).json(conteudos);
+}
+
 export async function create(req: Request, res: Response, next: NextFunction)
 {
     const nome = req.body.nome;

@@ -16,6 +16,15 @@ export async function getFilteredPaged(nome: string | null | undefined, skip: nu
     return categorias;
 }
 
+export async function getConteudos(id_categoria: number, skip = 0, limit = 100)
+{
+    const conteudos = await categoriasRepository.getConteudos(id_categoria, skip, limit);
+    return {
+        id_categoria: id_categoria,
+        conteudos: conteudos
+    };
+}
+
 export async function update(id: number, nome: string)
 {
     const result = await categoriasRepository.update(id, nome);

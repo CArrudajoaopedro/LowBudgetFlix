@@ -2,15 +2,15 @@ import * as episodiosRepository from "./episodios.repository";
 import * as appError from "../errors/AppErrors";
 import { CreateEpisodioDTO, UpdateEpisodioDTO, QueryEpisodioDTO, EpisodioResponseSchema } from "./episodios.schema";
 import { getById as getConteudoById } from "../conteudos/conteudos.repository";
-import { transaction } from "../db";
+import { pool, transaction } from "../db";
 import { Faixa } from "../faixas/faixas.entity";
 import { getByUsuarioEpisodio as getHistorico } from "../historico_visualizacao/historico_visualizacao.repository";
 import { getByEpisodio as getFaixas } from "../faixas/faixas.repository";
 import { getById as getConteudo } from "../conteudos/conteudos.repository";
 
-async function _assertSerieIdExiste(id: number)
+async function _assertSerieIdExiste(id: number, db: any)
 {
-    const conteudo = await getConteudoById(id);
+    const conteudo = await getConteudoById(id, db);
     if (!conteudo || conteudo.tipo != 'serie')
     {
         throw new appError.NotFoundError("Série não encontrada");
@@ -29,31 +29,32 @@ export async function getById(id: number)
 
 async function _getBySerie(
     id_serie: number,
-    dto: QueryEpisodioDTO
+    dto: QueryEpisodioDTO,
+    db: any
 )
 {
-    await _assertSerieIdExiste(id_serie);
+    await _assertSerieIdExiste(id_serie, db);
     const {temporada, numero} = dto;
-    const episodios = await episodiosRepository.getBySerie(id_serie, temporada, numero);
+    const episodios = await episodiosRepository.getBySerie(id_serie, temporada, numero, db);
     return episodios.map((e) => EpisodioResponseSchema.parse(e));
 }
 
-async function _create(dto: CreateEpisodioDTO)
+async function _create(dto: CreateEpisodioDTO, db: any)
 {
     const {id_conteudo, titulo, sinopse, lancamento, duracao, temporada, numero} = dto;
-    await _assertSerieIdExiste(id_conteudo);
-    const episodio = await episodiosRepository.create(id_conteudo, titulo, sinopse, lancamento, duracao, temporada, numero);
+    await _assertSerieIdExiste(id_conteudo, db);
+    const episodio = await episodiosRepository.create(id_conteudo, titulo, sinopse, lancamento, duracao, temporada, numero, db);
     return EpisodioResponseSchema.parse(episodio);
 }
 
-async function _update(id: number, dto: UpdateEpisodioDTO)
+async function _update(id: number, dto: UpdateEpisodioDTO, db: any)
 {
     const {id_conteudo, titulo, sinopse, lancamento, duracao, temporada, numero} = dto;
     if (id_conteudo)
     {
-        await _assertSerieIdExiste(id_conteudo);
+        await _assertSerieIdExiste(id_conteudo, db);
     }
-    const episodio = await episodiosRepository.update(id, id_conteudo, titulo, sinopse, lancamento, duracao, temporada, numero);
+    const episodio = await episodiosRepository.update(id, id_conteudo, titulo, sinopse, lancamento, duracao, temporada, numero, db);
     return EpisodioResponseSchema.parse(episodio);
 }
 

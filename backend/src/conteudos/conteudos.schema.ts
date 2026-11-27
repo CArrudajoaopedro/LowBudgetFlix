@@ -36,9 +36,20 @@ export const ConteudoResponseSchema = z.object({
     criado_em: z.date()
 })
 
+export const QueryCategoriasConteudoSchema = z.object({
+    skip: z.int().default(0),
+    limit: z.int().max(1000).default(100)
+})
+
+export const InsertCategoriaConteudoSchema = z.object({
+    id_categoria: z.coerce.number().int()
+});
+
+export const RemoveCategoriaConteudoSchema = InsertCategoriaConteudoSchema;
+
 export const IdSchema = z.object({
     id: z.coerce.number().int()
-})
+});
 
 export type QueryConteudoDTO = z.infer<typeof QueryConteudoSchema>;
 export type CreateConteudoDTO = z.infer<typeof CreateConteudoSchema>;

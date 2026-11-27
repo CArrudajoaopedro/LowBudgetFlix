@@ -99,9 +99,9 @@ export async function updateFlagAdmin(id: number)
     const usuarioDTO = usuariosEntity.UsuarioResponseSchema.parse(usuario)
     return usuarioDTO;
 }
-async function _remove(id: number)
+async function _remove(id: number, db: any)
 {
-    const usuario = await usuariosRepository.getById(id);
+    const usuario = await usuariosRepository.getById(id, db);
     if (!usuario)
     {
         throw new appErrors.NotFoundError("Usuario não encontrado");
@@ -110,7 +110,7 @@ async function _remove(id: number)
     {
         throw new appErrors.ForbiddenError("Não é possível deletar usuário administrador.");
     }
-    await usuariosRepository.remove(id);
+    await usuariosRepository.remove(id, db);
 }
 
 export async function remove(id: number)

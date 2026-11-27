@@ -9,12 +9,13 @@ async function _upsert(
     id_usuario: number,
     id_conteudo: number | null,
     id_episodio: number | null,
-    dto: UpsertHistoricoDTO
+    dto: UpsertHistoricoDTO,
+    db: any
 )
 {
     if (id_conteudo)
     {
-        await _assertFilmeIdExiste(id_conteudo);
+        await _assertFilmeIdExiste(id_conteudo, db);
     }
     const historico = new HistoricoVisualizacao(
         {
@@ -26,7 +27,7 @@ async function _upsert(
     )
     try
     {
-        const historico_atualizado = await historicoRepository.upsert(historico);
+        const historico_atualizado = await historicoRepository.upsert(historico, db);
         return historico_atualizado;
     }
     catch (err: any)

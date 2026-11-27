@@ -58,15 +58,15 @@ export async function getById(id: number)
     return faixa;
 }
 
-async function _create(dto: Faixa)
+async function _create(dto: Faixa, db: any)
 {
     if (dto.id_conteudo)
     {
-        await _assertFilmeIdExiste(dto.id_conteudo);
+        await _assertFilmeIdExiste(dto.id_conteudo, db);
     }
     try
     {
-        const result = await faixasRepository.create(dto);
+        const result = await faixasRepository.create(dto, db);
         const faixa = FullResponseFaixaSchema.parse(result);
         return faixa;
     }

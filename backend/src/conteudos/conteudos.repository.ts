@@ -1,5 +1,7 @@
+import { Pool, PoolClient } from "pg";
 import { pool } from "../db";
 import { Conteudo, TipoConteudo } from "./conteudos.entity";
+import { Categoria } from "../categorias/categorias.entity";
 
 export async function getFilteredPaged(
     titulo: string | null | undefined,
@@ -59,16 +61,28 @@ export async function getFilteredPaged(
     const conteudos = result.rows.map((row) => new Conteudo(row));
     return conteudos;
 }
-export async function getById(id: number)
+export async function getById(id: number, db: Pool | PoolClient = pool)
 {
     const query = "SELECT * FROM conteudos WHERE id = $1;";
-    const result = await pool.query(query, [id]);
+    const result = await db.query(query, [id]);
     if (!result.rows[0])
     {
         return null;
     }
     const conteudo = new Conteudo(result.rows[0]);
     return conteudo;
+}
+export async function getCategorias(id_conteudo: number, skip = 0, limit = 100)
+{
+    const query = `SELECT cat.id, cat.nome FROM categorias_conteudos AS cat_con
+    JOIN categorias AS cat
+    ON cat_con.id_categoria = cat.id
+    WHERE cat_con.id_conteudo = $1
+    ORDER BY cat.nome OFFSET $2 ROWS FETCH FIRST $3 ROWS ONLY;`;
+    const values = [id_conteudo, skip * limit, limit];
+    const result = await pool.query(query, values);
+    const categorias = result.rows.map((c) => new Categoria(c));
+    return categorias;
 }
 export async function create(
     titulo: string,
@@ -83,6 +97,38 @@ export async function create(
     const result = await pool.query(query, values);
     const conteudo = new Conteudo(result.rows[0]);
     return conteudo;
+}
+export async function insertCategoria(id_conteudo: number, id_categoria: number)
+{
+    try
+    {   
+        const query = `INSERT INTO categorias_conteudos
+        (id_categoria, id_conteudo)
+        VALUES
+        ($1, $2)
+        ON CONFLICT DO NOTHING;`;
+        const values = [id_categoria, id_conteudo];
+        await pool.query(query, values);
+    }
+    catch (err: any)
+    {
+        if (err.code === '23503' && err.constraint === 'fk_cat_cont_categoria')
+        {
+            const error: any = new Error("CATEGORY_CONTENT_NON_EXISTING_CATEGORY_REFERENCE");
+            error.code = 'CATEGORY_CONTENT_NON_EXISTING_CATEGORY_REFERENCE';
+            throw error;
+        }
+        else if (err.code === '23503' && err.constraint === 'fk_cat_cont_conteudo')
+        {
+            const error: any = new Error("CATEGORY_CONTENT_NON_EXISTING_CONTENT_REFERENCE");
+            error.code = 'CATEGORY_CONTENT_NON_EXISTING_CONTENT_REFERENCE';
+            throw error;
+        }
+        else
+        {
+            throw err;
+        }
+    }
 }
 export async function update(
     id: number,
@@ -143,6 +189,11 @@ export async function update(
     const row = result.rows[0]
     const conteudo = new Conteudo(row);
     return conteudo;
+}
+export async function removeCategoria(id_conteudo: number, id_categoria: number)
+{
+    const query = "DELETE FROM categorias_conteudos WHERE id_categoria = $1 AND id_conteudo = $2;";
+    await pool.query(query, [id_categoria, id_conteudo]);
 }
 export async function remove(id: number)
 {

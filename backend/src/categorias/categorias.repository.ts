@@ -1,6 +1,7 @@
 import { pool } from "../db";
 import { Pool, PoolClient } from "pg";
 import { Categoria } from "./categorias.entity";
+import { Conteudo } from "../conteudos/conteudos.entity";
 
 export async function getFilteredPaged(
     nome: string | null | undefined,
@@ -24,6 +25,19 @@ export async function getFilteredPaged(
     const result = await db.query(query, values);
     const categorias = result.rows;
     return categorias;
+}
+
+export async function getConteudos(id_categoria: number, skip = 0, limit = 100)
+{
+    const query = `SELECT con.* FROM categorias_conteudos AS cat_con
+    JOIN conteudos AS con
+    ON cat_con.id_conteudo = con.id
+    WHERE cat_con.id_categoria = $1
+    ORDER BY con.titulo OFFSET $2 ROWS FETCH FIRST $3 ROWS ONLY;`;
+    const values = [id_categoria, skip * limit, limit];
+    const result = await pool.query(query, values);
+    const conteudos = result.rows.map((c) => new Conteudo(c));
+    return conteudos;
 }
 
 export async function create(nome: string, db: Pool | PoolClient = pool)
