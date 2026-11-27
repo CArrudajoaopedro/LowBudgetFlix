@@ -13,6 +13,7 @@ import categoriasRoutes from "./categorias/categorias.routes";
 import artistasRoutes from "./artistas/artistas.routes";
 import historicoRoutes from "./historico_visualizacao/historico_visualizacao.routes"
 import avaliacoesRoutes from "./avaliacoes/avaliacoes.routes";
+import creditosRoutes from "./creditos/creditos.routes";
 
 const config = loadConfig({databaseUrl: false, jwtSecret: false});
 const app = express();
@@ -31,6 +32,7 @@ app.use(categoriasRoutes);
 app.use(artistasRoutes);
 app.use(historicoRoutes);
 app.use(avaliacoesRoutes);
+app.use(creditosRoutes);
 app.use((req: Request, res: Response, next: NextFunction) => {
     const err: AppError = new AppError("A rota solicitada não existe.",
     404, "ROUTE_NOT_FOUND");

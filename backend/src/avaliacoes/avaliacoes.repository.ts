@@ -16,8 +16,8 @@ export async function upsert(obj: Avaliacao, db: Pool | PoolClient = pool)
     try
     {
         const result = await db.query(query, values);
-        const historico = new Avaliacao(result.rows[0]);
-        return historico;
+        const avaliacao = new Avaliacao(result.rows[0]);
+        return avaliacao;
     }
     catch (err: any)
     {
@@ -48,8 +48,8 @@ export async function getByUsuarioFilme(id_usuario: number, id_conteudo: number)
     {
         return null;
     }
-    const historico = new Avaliacao(result.rows[0]);
-    return historico;
+    const avaliacao = new Avaliacao(result.rows[0]);
+    return avaliacao;
 }
 
 export async function getMedia(id_conteudo: number)
